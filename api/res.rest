@@ -1,0 +1,17 @@
+GET http://localhost:3001/todos
+
+###
+
+POST http://localhost:3001/todo/new
+Content-Type: application/json
+
+{
+    "text" : "Focus  on your carrier bitch37"
+}
+
+###
+DELETE  http://localhost:3001/todo/delete/6481f69c79b090c18e98d596
+
+
+###
+PUT  http://localhost:3001/todo/complete/64822042387fd583a3dc339d
