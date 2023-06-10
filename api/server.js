@@ -44,7 +44,7 @@ app.get('/todo/complete/:id', async(req,res)=>{
 })
 
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 
 
 
