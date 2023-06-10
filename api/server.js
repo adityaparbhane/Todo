@@ -2,19 +2,18 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const Todo = require('./models/todo');
+require("dotenv").config();
 
+
+const connectDB = require("./config/db");
 
 const app = express();
+
+connectDB();
 
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect("mongodb://127.0.0.1:27017/mern_todo_app" ,{
-    useNewUrlParser:true,
-    useUnifiedTopology:true
-})
-    .then(() => console.log("connected to DB"))
-    .catch(console.error);
 
 app.get("/todos" ,async (req,res) => {
     const todos = await Todo.find();
@@ -45,16 +44,14 @@ app.get('/todo/complete/:id', async(req,res)=>{
 })
 
 
+const PORT = process.env.PORT || 3001;
 
 
 
+if (process.env.NODE_ENV = "production") {
+    app.use(express.static("client/build"));
+}
 
-
-
-
-
-
-
-app.listen(3001, ()=> {
-    console.log("Server running on 3001");
+app.listen(PORT, () =>{
+    console.log(`Server is running on port ${PORT}`);
 })
