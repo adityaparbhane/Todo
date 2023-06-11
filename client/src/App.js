@@ -1,7 +1,7 @@
 import {useState, useEffect } from 'react';
 
 
-const api_base = 'https://taskly-todo-app.onrender.com';
+const api_base = 'https://taskly-todo.onrender.com';
 
 function App() {
 	const [todos, setTodos] = useState([]);
