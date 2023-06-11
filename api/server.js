@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const Todo = require('./models/todo');
 require("dotenv").config();
+const path = require('path');
 
 
 const connectDB = require("./config/db");
@@ -33,7 +34,7 @@ app.post('/todo/new', (req,res) => {
 app.delete('/todo/delete/:id', async(req,res)=>{
     const result = await Todo.findByIdAndDelete(req.params.id);
     res.json(result);
-})
+});
 
 app.get('/todo/complete/:id', async(req,res)=>{
     const todo = await Todo.findById(req.params.id);
@@ -41,8 +42,13 @@ app.get('/todo/complete/:id', async(req,res)=>{
 
     todo.save();
     res.json(todo);
-})
+});
 
+
+app.use(express.static(path.join(__dirname,'./client/build')));
+app.get('*', function(req,res) {
+    res.sendFile(path.join(__dirname,'./client/build/index.html'));
+});
 
 const PORT = process.env.PORT;
 
