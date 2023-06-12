@@ -1,63 +1,60 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const Todo = require('./models/todo');
-require("dotenv").config();
-const path = require('path');
-
-
-const connectDB = require("./config/db");
 
 const app = express();
-
-connectDB();
 
 app.use(express.json());
 app.use(cors());
 
+mongoose.connect('mongodb+srv://parbhaneaditya:aditya12345@taskly1.hlphbso.mongodb.net/?retryWrites=true&w=majority', {
+	useNewUrlParser: true, 
+	useUnifiedTopology: true 
+}).then(() => console.log("Connected to MongoDB")).catch(console.error);
 
-app.get("/todos" ,async (req,res) => {
-    const todos = await Todo.find();
+// Models
+const Todo = require('./models/todo');
 
-    res.json(todos);
+app.get('/todos', async (req, res) => {
+	const todos = await Todo.find();
+
+	res.json(todos);
 });
 
-app.post('/todo/new', (req,res) => {
-    const todo = new Todo({
-        text: req.body.text
-    });
-    todo.save();
+app.post('/todo/new', (req, res) => {
+	const todo = new Todo({
+		text: req.body.text
+	})
 
-    res.json(todo);
+	todo.save();
+
+	res.json(todo);
 });
 
-app.delete('/todo/delete/:id', async(req,res)=>{
-    const result = await Todo.findByIdAndDelete(req.params.id);
-    res.json(result);
+app.delete('/todo/delete/:id', async (req, res) => {
+	const result = await Todo.findByIdAndDelete(req.params.id);
+
+	res.json({result});
 });
 
-app.get('/todo/complete/:id', async(req,res)=>{
-    const todo = await Todo.findById(req.params.id);
-    todo.complete = !todo.complete;
+app.get('/todo/complete/:id', async (req, res) => {
+	const todo = await Todo.findById(req.params.id);
 
-    todo.save();
-    res.json(todo);
-});
+	todo.complete = !todo.complete;
 
+	todo.save();
 
-app.use(express.static(path.join(__dirname,"build")));
-app.get('/*', (req,res) => {
-    res.sendFile(path.join(__dirname,"build","index.html"));
-});
-
-const PORT = process.env.PORT;
-
-
-
-if (process.env.NODE_ENV = "production") {
-    app.use(express.static("client/build"));
-}
-
-app.listen(PORT, () =>{
-    console.log(`Server is running on port ${PORT}`);
+	res.json(todo);
 })
+
+app.put('/todo/update/:id', async (req, res) => {
+	const todo = await Todo.findById(req.params.id);
+
+	todo.text = req.body.text;
+
+	todo.save();
+
+	res.json(todo);
+});
+
+app.listen(3001);
